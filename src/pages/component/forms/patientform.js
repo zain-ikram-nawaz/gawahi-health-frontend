@@ -5,7 +5,8 @@ import { useRouter } from "next/router";
 
 export default function Patientform() {
   const router = useRouter();
-  const { addData } = router.query;
+  const data2  = router.query.data;
+  // console.log(data2)
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -21,6 +22,7 @@ export default function Patientform() {
   const [permanentAddress, setPermanentAddress] = useState("");
   const [servicePrice, setServicePrice] = useState("");
   const [notes, setNotes] = useState("");
+  const [currentdate, setCurrentDate] = useState("");
   const [patientdata, setPatientData] = useState({
     firstName: "",
     lastName: "",
@@ -36,6 +38,7 @@ export default function Patientform() {
     permanentAddress: "",
     servicePrice: "",
     notes: "",
+    currentDate:"",
   });
 
   const handleSubmit = (event) => {
@@ -55,13 +58,17 @@ export default function Patientform() {
       permanentAddress,
       servicePrice,
       notes,
+      currentdate,
     };
 
+    data.push(newPatientData)
+    console.log(data)
     // Update the patient data state with the collected data
-    setPatientData(newPatientData);
+    // setPatientData(newPatientData);
+    router.push("/component/dashboard")
 
     // Log the collected data (Optional)
-    localStorage.setItem("patientData",JSON.stringify([newPatientData]))
+    // localStorage.setItem("patientData",JSON.stringify([newPatientData]))
   };
 
   return (
@@ -373,6 +380,26 @@ export default function Patientform() {
                 type="text"
                 name="address"
                 id="age"
+                autoComplete="address"
+                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+          <div className="sm:col-span-2">
+            <label
+              htmlFor="address"
+              className="block text-sm font-semibold leading-6 "
+            >
+              Current Date
+            </label>
+            <div className="mt-2.5">
+              <input
+                onChange={(e) => {
+                  setCurrentDate(e.target.value);
+                }}
+                type="date"
+                name="date"
+                id="date"
                 autoComplete="address"
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
               />

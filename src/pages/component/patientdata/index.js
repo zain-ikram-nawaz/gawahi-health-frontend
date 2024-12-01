@@ -10,19 +10,21 @@ const EmployeeList = () => {
   
   const router = useRouter();
 
-  const addData = (newData) => {
-    data.push(newData);
-  }
+  // const addData = (newData) => {
+  //   data.push(newData);
+  // }
 
   const handleNavigation = () => {
+    console.log(data)
     router.push({
-      pathname: "/component/forms/patientform"
+      pathname: "/component/forms/patientform",
+      query: { data: JSON.stringify(data) },
     });
   };
 
   
 
-  console.log(data.length)
+  // console.log(data.length)
   return (
     <div className="">
       <div className='ml-6'>
@@ -129,19 +131,19 @@ const EmployeeList = () => {
                   <td className="p-4 border-b border-slate-200">
                     <div className="flex items-center gap-3">
                       <img
-                        src={employee.img}
-                        alt={employee.name}
+                        src={"/profile.png"}
+                        alt={employee.firstName}
                         className="relative inline-block h-9 w-9 !rounded-full object-cover object-center"
                       />
                       <div className="flex flex-col">
-                        <p className="text-sm font-semibold text-slate-700">{employee.name}</p>
+                        <p className="text-sm font-semibold text-slate-700">{employee.firstName}</p>
                         <p className="text-sm text-slate-500">{employee.email}</p>
                       </div>
                     </div>
                   </td>
                   <td className="p-4 border-b border-slate-200">
                     <div className="flex flex-col">
-                      <p className="text-sm font-semibold text-slate-700">{employee.number}</p>
+                      <p className="text-sm font-semibold text-slate-700">{employee.phoneNumber}</p>
                       <p className="text-sm text-slate-500">{employee.city}</p>
                     </div>
                   </td>
@@ -168,10 +170,10 @@ const EmployeeList = () => {
                     <p className="text-sm text-slate-500">{employee.currentAddress}</p>
                   </td> */}
                   <td className="p-4 border-b border-slate-200">
-                    <p className="text-sm text-slate-500">{employee.permenentAddress}</p>
+                    <p className="text-sm text-slate-500">{employee.permanentAddress}</p>
                   </td>
                   <td className="p-4 border-b border-slate-200">
-                    <p className="text-sm text-slate-500">{employee.employed}</p>
+                    <p className="text-sm text-slate-500">{employee.currentdate}</p>
                   </td>
                   <td className="p-4 border-b border-slate-200">
                     <button
