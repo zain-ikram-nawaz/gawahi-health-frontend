@@ -1,0 +1,48 @@
+[
+    {
+      "name": "John Michael",
+      "email": "john@creative-tim.com",
+      "role": "Manager",
+      "dept": "Organization",
+      "status": "online",
+      "employed": "23/04/18",
+      "age": "32",
+      "gender": "male",
+      "city": "karachi",
+      "number": "02323238928",
+      "img": "/profile.png",
+      "currentAddress": "block H north nazimabad karachi",
+"permenentAddress" : "shadman north nazimabad karachi"
+    },
+    {
+      "name": "Alexa Liras",
+      "email": "alexa@creative-tim.com",
+      "role": "Designer",
+      "dept": "Marketing",
+      "status": "offline",
+      "employed": "23/04/18",
+      "age": "22",
+      "gender": "female",
+      "city": "karachi",
+      "number": "02323238928",
+    "img": "/profile.png",
+    "currentAddress": "block H north nazimabad karachi",
+"permenentAddress" : "shadman north nazimabad karachi"
+    },
+    {
+      "name": "Laurent Perrier",
+      "email": "laurent@creative-tim.com",
+      "role": "Executive",
+      "dept": "Projects",
+      "status": "offline",
+      "employed": "19/09/17",
+      "age": "20",
+      "gender": "male",
+      "city": "karachi",
+      "number": "02323238928",
+"img": "/profile.png",
+"currentAddress": "block H north nazimabad karachi",
+"permenentAddress" : "shadman north nazimabad karachi"
+    }
+  ]
+  

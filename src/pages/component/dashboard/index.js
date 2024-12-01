@@ -24,11 +24,12 @@ const Sidebar = () => {
   return (
     <aside className="bg-gray-800 text-white w-64 min-h-screen p-4">
       <nav>
-       <div className=' flex justify-center items-center bg-gray-600 text-3xl w-full h-40 rounded-xl'>
-       <div> <Image src={"/logo.jpg"} width={100} height={100} alt='dsad'></Image></div></div>
+       <div className=' flex  items-center bg-gray-600 text-3xl w-full h-20 rounded-xl'>
+       <div> <Image src={"/logo.png"} width={200} height={0} alt='dsad'></Image></div></div>
         <ul className="space-y-4">
-          <p className='mt-8 text-gray-500'>Menu</p>
-          <hr className='border-gray-100'/>
+<p className='mt-8 text-gray-500'>Menu</p>
+  
+<hr className='border-gray-500 '/>  
           <li className="opcion-con-desplegable bg-gray-600  p-2 rounded-xl">
             <div
               className="flex items-center justify-between p-2 hover:bg-gray-700 cursor-pointer"
@@ -36,6 +37,7 @@ const Sidebar = () => {
             >
               
               <div className="flex items-center ">
+              
                 <FaBuildingLock className='mr-2'></FaBuildingLock>
                 <span>Patient</span>
               </div>

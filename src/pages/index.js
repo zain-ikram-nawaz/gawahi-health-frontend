@@ -8,9 +8,9 @@ export default function Home() {
   return (
  <div>
 
-  {/* <LoginPage></LoginPage> */}
+  <LoginPage></LoginPage>
   {/* <SignupPage></SignupPage> */}
-  <DashboardPage></DashboardPage>
+  {/* <DashboardPage></DashboardPage> */}
   {/* <Patientform></Patientform> */}
  </div>
   );
