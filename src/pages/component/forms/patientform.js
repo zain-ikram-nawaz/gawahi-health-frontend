@@ -22,7 +22,7 @@ export default function Patientform() {
   const [permanentAddress, setPermanentAddress] = useState("");
   const [servicePrice, setServicePrice] = useState("");
   const [notes, setNotes] = useState("");
-  const [currentdate, setCurrentDate] = useState("");
+  
   const [patientdata, setPatientData] = useState({
     firstName: "",
     lastName: "",
@@ -38,7 +38,7 @@ export default function Patientform() {
     permanentAddress: "",
     servicePrice: "",
     notes: "",
-    currentDate:"",
+  
   });
 
   const handleSubmit = (event) => {
@@ -58,7 +58,6 @@ export default function Patientform() {
       permanentAddress,
       servicePrice,
       notes,
-      currentdate,
     };
 
     data.push(newPatientData)
@@ -89,9 +88,7 @@ export default function Patientform() {
         <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
           Add Patient Information{" "}
         </h2>
-        {/* <p className="mt-2 text-lg leading-8 text-gray-600">
-        "Provide your details below to help us better assist you with personalized care.".
-        </p> */}
+       
       </div>
       <form
         onSubmit={handleSubmit}
@@ -136,6 +133,49 @@ export default function Patientform() {
                 name="last-name"
                 id="last-name"
                 autoComplete="family-name"
+                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+
+           {/* current address */}
+           <div className="sm:col-span-2">
+            <label
+              htmlFor="address"
+              className="block text-sm font-semibold leading-6 "
+            >
+              Current Address
+            </label>
+            <div className="mt-2.5">
+              <input
+                onChange={(e) => {
+                  setCurrentAddress(e.target.value);
+                }}
+                type="text"
+                name="address"
+                id="age"
+                autoComplete="address"
+                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+            {/* permenet address */}
+            <div className="sm:col-span-2">
+            <label
+              htmlFor="address"
+              className="block text-sm font-semibold leading-6 "
+            >
+              Permenent Address
+            </label>
+            <div className="mt-2.5">
+              <input
+                onChange={(e) => {
+                  setPermanentAddress(e.target.value);
+                }}
+                type="text"
+                name="address"
+                id="age"
+                autoComplete="address"
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
               />
             </div>
@@ -257,7 +297,7 @@ export default function Patientform() {
               <span className="ml-2">female</span>
             </div>
           </div>
-          {/* number */}
+          {/* doctors name */}
           <div className="sm:col-span-2">
             <label
               htmlFor="address"
@@ -321,48 +361,8 @@ export default function Patientform() {
               />
             </div>
           </div>
-          {/* current address */}
-          <div className="sm:col-span-2">
-            <label
-              htmlFor="address"
-              className="block text-sm font-semibold leading-6 "
-            >
-              Current Address
-            </label>
-            <div className="mt-2.5">
-              <input
-                onChange={(e) => {
-                  setCurrentAddress(e.target.value);
-                }}
-                type="text"
-                name="address"
-                id="age"
-                autoComplete="address"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-          {/* permenet address */}
-          <div className="sm:col-span-2">
-            <label
-              htmlFor="address"
-              className="block text-sm font-semibold leading-6 "
-            >
-              Permenent Address
-            </label>
-            <div className="mt-2.5">
-              <input
-                onChange={(e) => {
-                  setPermanentAddress(e.target.value);
-                }}
-                type="text"
-                name="address"
-                id="age"
-                autoComplete="address"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
+         
+        
           {/* service price */}
 
           <div className="sm:col-span-2">
@@ -385,26 +385,7 @@ export default function Patientform() {
               />
             </div>
           </div>
-          <div className="sm:col-span-2">
-            <label
-              htmlFor="address"
-              className="block text-sm font-semibold leading-6 "
-            >
-              Current Date
-            </label>
-            <div className="mt-2.5">
-              <input
-                onChange={(e) => {
-                  setCurrentDate(e.target.value);
-                }}
-                type="date"
-                name="date"
-                id="date"
-                autoComplete="address"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
+         
 
           <div className="sm:col-span-2">
             <label

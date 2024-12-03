@@ -1,7 +1,7 @@
-import DashboardPage from "./component/dashboard";
+import DashboardPage from "./dashboard";
 import Patientform from "./component/forms/patientform";
-import LoginPage from "./component/login";
-import SignupPage from "./component/signup";
+import LoginPage from "./component/logincom";
+import SignupPage from "./component/signupcom";
 
 
 export default function Home() {

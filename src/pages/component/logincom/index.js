@@ -91,12 +91,7 @@ export default function LoginPage() {
               Login
             </button>
 
-            {/* Link to Signup */}
-            <Link href="/component/signup">
-              <span className="text-sm ml-2 cursor-pointer rounded-xl hover:text-blue-500">
-                Don't have an account? <span>Register</span> 
-              </span>
-            </Link>
+          
           </form>
         </div>
       </div>

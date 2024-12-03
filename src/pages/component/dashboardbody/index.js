@@ -1,18 +1,26 @@
-import React from 'react';
+import React ,{useState} from 'react';
 import data from '../../data.json'
-import { FaCodePullRequest } from "react-icons/fa6";
-import Link from 'next/link';
+import { IoIosSearch } from "react-icons/io";
+import Modal from '../detailmodal'
+
 import Image from 'next/image';
-import Patientform from '../forms/patientform'
 import { useRouter } from "next/router";
 
+
 const EmployeeList = () => {
+  const [saveId, setSaveId] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+
+
   
+
   const router = useRouter();
 
-  // const addData = (newData) => {
-  //   data.push(newData);
-  // }
+
+  const handleOpen = (dataId) => {
+    setSaveId(dataId);
+    setIsOpen(true);
+  };
 
   const handleNavigation = () => {
     console.log(data)
@@ -28,50 +36,45 @@ const EmployeeList = () => {
   return (
     <div className="">
       <div className='ml-6'>
-              <h3 className="text-lg font-semibold text-slate-800 ">Patient List</h3>
+              <h3 className="text-lg font-semibold text-slate-800 ">Dashboard</h3>
               <p className="text-slate-500">Review each person before edit</p>
             </div>
         <div className='flex gap-12 p-4 mt-4'>
             <div className='bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl'>
 {/* <p><FaCodePullRequest className='bg-gray-600 text-5xl p-2 text-white rounded-3xl'></FaCodePullRequest></p> */}
-<Image src={"/patient.png"} width={100} height={100} alt='patient'></Image>
+<Image src={"/patients.png"} width={100} height={100} alt='patient'></Image>
 {/* <p className='text-gray-500'>Step 1</p> */}
 <h2 className='text-gray-800 font-semibold'>Total No of Patients</h2>
 <p className='bg-gray-400 text-white px-4 py-[2px] text-2xl rounded-lg inline-block'>{data.length <= 9 ? `0${data.length}` :data.length} </p>
 
             </div>
             <div className='bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl'>
-            <Image src={"/request.png"} width={100} height={100} alt='patient'></Image>
-{/* <p><FaCodePullRequest className='bg-gray-600 text-5xl p-2 text-white rounded-3xl '></FaCodePullRequest></p> */}
-{/* <p className='text-white'>Step 1</p> */}
+            <Image src={"/req.png"} width={100} height={100} alt='patient'></Image>
+
 <h2 className=' font-semibold'>Total No of Request </h2>
 <p className='bg-gray-400  text-white px-4 py-[2px] text-2xl rounded-lg inline-block'>28  </p>
 
             </div>
+            <div className='bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl'>
+            <Image src={"/patient.png"} width={100} height={100} alt='patient'></Image>
+
+<h2 className=' font-semibold pt-4'>Total No of Users </h2>
+<p className='bg-gray-400  text-white px-4 py-[2px] text-2xl rounded-lg inline-block'>9  </p>
+
+            </div>
          
         </div>
-      {/* <div className="block mb-4 mx-auto border-b border-slate-300 pb-2 max-w-[360px]">
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="#"
-          className="block w-full px-4 py-2 text-center text-slate-700 transition-all"
-        >
-          More components on <b>Material Tailwind</b>.
-        </a>
-      </div> */}
+     
 
       <div className="relative flex flex-col w-full h-full text-slate-700 bg-white shadow-md rounded-xl bg-clip-border">
         <div className="relative mx-4 mt-4 overflow-hidden text-slate-700 bg-white rounded-none bg-clip-border">
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-between">
+            <div className="text-lg font-semibold text-slate-800 ">
+              <p>Patient List</p>
+            </div>
             
-            <div className="flex gap-2 shrink-0 sm:flex-row">
-              {/* <button
-                className="rounded border border-slate-300 py-2.5 px-3 text-center text-xs font-semibold text-slate-600 transition-all hover:opacity-75 focus:ring focus:ring-slate-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button"
-              >
-                View All
-              </button> */}
+            <div className="flex gap-2 shrink-0 ">
+        <div>    <IoIosSearch className=' absolute text-3xl top-1  ml-1 text-gray-400'/> <input type="seacrh" placeholder='Search'  className='search border-2 h-full rounded'/></div>
               <button onClick={handleNavigation}
                 className="flex select-none w-full items-center gap-2 rounded bg-slate-800 py-2.5 px-4 text-xs font-semibold text-white shadow-md shadow-slate-900/10 transition-all hover:shadow-lg hover:shadow-slate-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                 type="button"
@@ -129,7 +132,9 @@ const EmployeeList = () => {
              {data.map((employee, index) => (
                 <tr key={index}>
                   <td className="p-4 border-b border-slate-200">
-                    <div className="flex items-center gap-3">
+                    <div  onClick={() => {
+                            handleOpen(employee.id);
+                          }} className="flex items-center gap-3">
                       <img
                         src={"/profile.png"}
                         alt={employee.firstName}
@@ -147,28 +152,14 @@ const EmployeeList = () => {
                       <p className="text-sm text-slate-500">{employee.city}</p>
                     </div>
                   </td>
-                  {/* <td className="p-4 border-b border-slate-200">
-                    <div className="w-max">
-                      <div
-                        className={`relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-md select-none whitespace-nowrap ${
-                          employee.status === 'online'
-                            ? 'bg-green-500/20 text-green-900'
-                            : 'bg-slate-100 text-slate-500'
-                        }`}
-                      >
-                        <span>{employee.status}</span>
-                      </div>
-                    </div>
-                  </td> */}
+                
                   <td className="p-4 border-b border-slate-200">
                     <p className="text-sm text-slate-500">{employee.age}</p>
                   </td>
                   <td className="p-4 border-b border-slate-200">
                     <p className="text-sm text-slate-500">{employee.gender}</p>
                   </td>
-                  {/* <td className="p-4 border-b border-slate-200">
-                    <p className="text-sm text-slate-500">{employee.currentAddress}</p>
-                  </td> */}
+                 
                   <td className="p-4 border-b border-slate-200">
                     <p className="text-sm text-slate-500">{employee.permanentAddress}</p>
                   </td>
@@ -204,12 +195,17 @@ const EmployeeList = () => {
                   </td>
                  
                 </tr>
-              ))}
+              ))
+              
+            }
+            
             </tbody>
+            {isOpen && <Modal setIsOpen={setIsOpen} itemId={saveId} />}
           </table>
         </div>
       </div>
     </div>
+          
   );
 };
 
