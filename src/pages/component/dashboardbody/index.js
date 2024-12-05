@@ -18,24 +18,24 @@ const EmployeeList = () => {
     router.push("/form");
   };
 
-  // const editData = useSelector((state) => state.login.LogInInfo);
-  // console.log(editData.user)
-
   const [patientData, setPatientData] = useState();
   const [saveId, setSaveId] = useState();
   const [isOpen, setIsOpen] = useState(false);
+  const [logInfo,setLogInfo]=useState()
 
   const handleOpen = (dataId) => {
     setSaveId(dataId);
     setIsOpen(true);
   };
 
+  const fetchData = async () => {
+    const response = await fetch(`${Api.USERS}patients`);
+    const data = await response.json();
+    setPatientData(data.data);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(`${Api.USERS}patients`);
-      const data = await response.json();
-      setPatientData(data.data);
-    };
+  
     fetchData();
   }, []);
 
@@ -49,12 +49,10 @@ const EmployeeList = () => {
         },
       });
   
-      // const result = await res.json();
+      
   
       if (res.ok) {
-        // console.log(result)
-      //  setPatientData(result)
-     
+        fetchData();
         toast.success("Item deleted successfully!", {
           position: "top-center",
         });
@@ -74,6 +72,34 @@ const EmployeeList = () => {
   
   useEffect(()=>{
   },[patientData])
+
+
+  // authentication
+
+  useEffect(() => {
+    const logData = localStorage.getItem("login");
+
+    if (logData) {
+      try {
+        const parsedData = JSON.parse(logData); // Parse the JSON string
+        setLogInfo(parsedData); // Update the state with the parsed object
+      } catch (error) {
+        console.error("Error parsing JSON from localStorage:", error);
+      }
+    }
+    else{
+      toast.error("Pleas Login First", {
+        position: "top-center"
+      });
+    }
+  }, []); // Empty dependency array ensures this runs only once
+
+  useEffect(() => {
+    if (logInfo) {
+      console.log(logInfo.user); // Access user information after state updates
+    }
+  }, [logInfo]); 
+
   return (
     <div className="">
       <div className="ml-6">
@@ -97,7 +123,7 @@ const EmployeeList = () => {
               : patientData?.length}{" "}
           </p>
         </div>
-        <div className="bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl">
+        {logInfo?.user.is_admin ? <><div className="bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl">
           <Image src={"/req.png"} width={70} height={70} alt="patient"></Image>
 
           <h2 className=" font-semibold">Total No of Request </h2>
@@ -117,7 +143,8 @@ const EmployeeList = () => {
           <p className="bg-gray-400  text-white px-4 py-[2px] text-2xl rounded-lg inline-block">
             9{" "}
           </p>
-        </div>
+        </div></> : ""}
+        
       </div>
 
       <div className="relative flex flex-col w-full h-full text-slate-700 bg-white shadow-md rounded-xl bg-clip-border">

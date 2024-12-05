@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 export default function SignupPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false); 
+  const [logInfo,setLogInfo]=useState()
   const [getId, setGetId] = useState(); 
   const [formValues, setFormValues] = useState({
     username: '',
@@ -98,26 +99,46 @@ fetch(`${Api.USERS}auth/local/register`, {
 
   };
 
+  useEffect(() => {
+    const logData = localStorage.getItem("login");
+
+    if (logData) {
+      try {
+        const parsedData = JSON.parse(logData); // Parse the JSON string
+        setLogInfo(parsedData); // Update the state with the parsed object
+      } catch (error) {
+        console.error("Error parsing JSON from localStorage:", error);
+      }
+    }
+    else{
+      toast.error("You are not an Admin", {
+        position: "top-center"
+      });
+      router.push('/')
+    }
+  }, []); // Empty dependency array ensures this runs only once
+
+  useEffect(() => {
+    if (logInfo) {
+      console.log(logInfo.user.is_admin);
+      if(!logInfo.user.is_admin){
+router.push("/")
+toast.error("You are not an Admin", {
+  position: "top-center"
+});
+      }
+     
+       // Access user information after state updates
+    }
+  }, [logInfo]);
+
   return (
     <div>
-      <div className="h-screen md:flex">
-        <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-700 to-blue-300 justify-around items-center hidden">
-          <div>
-            <h1 className="text-white font-bold text-4xl font-sans">Gawahi Health Care</h1>
-            <p className="text-white mt-1">Bring Health care at your door step.</p>
-            <button type="button" className="block w-28 bg-white text-blue-700 mt-4 py-2 rounded-2xl font-bold mb-2">
-              Read More
-            </button>
-          </div>
-          {/* Decorative elements */}
-          <div className="absolute -bottom-32 -left-40 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-          <div className="absolute -bottom-40 -left-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-          <div className="absolute -top-40 -right-0 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-          <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-        </div>
+      <div className="h-screen md:flex justify-center">
+       
         <div className="flex md:w-1/2 justify-center py-10 items-center bg-white">
           <form className="bg-white" onSubmit={handleSubmit}>
-            <h1 className="text-gray-800 font-bold text-2xl mb-1">Hello!</h1>
+            <h1 className="text-gray-800 font-bold text-2xl mb-1">Register New user!</h1>
             <p className="text-sm font-normal text-gray-600 mb-7">Please register an account</p>
 
            
@@ -248,9 +269,9 @@ fetch(`${Api.USERS}auth/local/register`, {
   )}
 </button>
 
-            <Link href="/login">
+            {/* <Link href="/login">
               <span className="text-sm ml-2 hover:text-blue-500 cursor-pointer">Already have an account?</span>
-            </Link>
+            </Link> */}
           </form>
         </div>
       </div>

@@ -121,7 +121,7 @@ export default function Leftdashboard() {
 
   useEffect(() => {
     if (logInfo) {
-      console.log(logInfo.user.is_admin); // Access user information after state updates
+      console.log(logInfo.user); // Access user information after state updates
     }
   }, [logInfo,loading2]); 
   return (
@@ -202,7 +202,7 @@ export default function Leftdashboard() {
               </div>
               {isContabilidadOpen && (
                 <ul className="ml-4 mt-2 ">
-                  <li
+                  {logInfo?.user.is_doctor ?  <li
                     onClick={() => {
                       handleClickButton("button2");
                       handleToggleModal();
@@ -217,8 +217,8 @@ export default function Leftdashboard() {
                       <IoIosArrowForward className="mr-2" />
                       Add request
                     </button>
-                  </li>
-                  <li
+                  </li> : ""}
+                 {logInfo?.user.is_admin ?   <li
                     onClick={() => {
                       handleClickButton("button4");
                     }}
@@ -238,12 +238,14 @@ export default function Leftdashboard() {
                       <IoIosArrowForward className="mr-2" />
                       {value ? "View Request" : "View Request"}
                     </button>
-                  </li>
+                  </li> : ""}
+                
                 </ul>
               )}
             </li>
           </Link>
-          {logInfo?.user?.is_admin ? <li
+        <Link href={"#"}>
+        {logInfo?.user?.is_admin ? <li
             onClick={() => {
               handleClickButton("button3");
               handleClick("register");
@@ -260,7 +262,7 @@ export default function Leftdashboard() {
                 <span>Register</span>
               </div>
             </div>
-          </li> :""}
+          </li> :""}</Link>
         </ul>
         <>
 {/* Modal toggle button */}

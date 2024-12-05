@@ -12,7 +12,7 @@ export default function Patientform() {
   const formRef = useRef();
   const dispatch = useDispatch();
   const editData = useSelector((state) => state.editData.selectedPatient); 
-
+  const [logInfo,setLogInfo]=useState()
 
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
@@ -156,6 +156,34 @@ export default function Patientform() {
         
       };
 
+
+      // privacy 
+
+      useEffect(() => {
+        const logData = localStorage.getItem("login");
+    
+        if (logData) {
+          try {
+            const parsedData = JSON.parse(logData); // Parse the JSON string
+            setLogInfo(parsedData); // Update the state with the parsed object
+          } catch (error) {
+            console.error("Error parsing JSON from localStorage:", error);
+          }
+        }
+        else{
+        
+        }
+      }, []); // Empty dependency array ensures this runs only once
+    
+      useEffect(() => {
+        if (logInfo) {
+          console.log(logInfo.user.is_receptionist);
+         
+         
+           // Access user information after state updates
+        }
+      }, [logInfo]);
+    
 
   return (
     <>
@@ -426,120 +454,113 @@ export default function Patientform() {
               <span className="ml-2">female</span>
             </div>
           </div>
-          {/* doctors name */}
-          <div className="sm:col-span-2">
-            <label
-              htmlFor="address"
-              className="block text-sm font-semibold leading-6 "
-            >
-              Doctor Name
-            </label>
-            <div className="mt-2.5">
-              <input
-                 value={doctorName}
-                onChange={(e) => {
-                  setDoctorName(e.target.value);
-                }}
-                type="text"
-                name="address"
-                id="age"
-                autoComplete="address"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-
-          {/* diagonoses */}
-          <div className="sm:col-span-2">
-            <label
-              htmlFor="address"
-              className="block text-sm font-semibold leading-6 "
-            >
-              Diagonoses
-            </label>
-            <div className="mt-2.5">
-              <input
-                 value={diagnosis}
-                onChange={(e) => {
-                  setDiagnosis(e.target.value);
-                }}
-                type="text"
-                name="address"
-                id="age"
-                autoComplete="address"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-          {/* treatment */}
-          <div className="sm:col-span-2">
-            <label
-              htmlFor="address"
-              className="block text-sm font-semibold leading-6 "
-            >
-              Treatment
-            </label>
-            <div className="mt-2.5">
-              <input
-              value={treatment}
-                onChange={(e) => {
-                  setTreatment(e.target.value);
-                }}
-                type="text"
-                name="address"
-                id="age"
-                autoComplete="address"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
          
-        
-          {/* service price */}
+          {!logInfo?.user.is_receptionist ? (
+  <>
+    <div className="sm:col-span-2">
+      <label
+        htmlFor="doctor-name"
+        className="block text-sm font-semibold leading-6 "
+      >
+        Doctor Name
+      </label>
+      <div className="mt-2.5">
+        <input
+          value={doctorName}
+          onChange={(e) => setDoctorName(e.target.value)}
+          type="text"
+          name="doctorName"
+          id="doctor-name"
+          autoComplete="doctor-name"
+          className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
+        />
+      </div>
+    </div>
 
-          <div className="sm:col-span-2">
-            <label
-              htmlFor="address"
-              className="block text-sm font-semibold leading-6 "
-            >
-              Service Price
-            </label>
-            <div className="mt-2.5">
-              <input
-              value={servicePrice}
-                onChange={(e) => {
-                  setServicePrice(e.target.value);
-                }}
-                type="number"
-                name="address"
-                id="age"
-                autoComplete="address"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-         
+    <div className="sm:col-span-2">
+      <label
+        htmlFor="diagnosis"
+        className="block text-sm font-semibold leading-6 "
+      >
+        Diagnosis
+      </label>
+      <div className="mt-2.5">
+        <input
+          value={diagnosis}
+          onChange={(e) => setDiagnosis(e.target.value)}
+          type="text"
+          name="diagnosis"
+          id="diagnosis"
+          autoComplete="diagnosis"
+          className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
+        />
+      </div>
+    </div>
 
-          <div className="sm:col-span-2">
-            <label
-              htmlFor="message"
-              className="block text-sm font-semibold leading-6 "
-            >
-              Recommendation/Additional Notes
-            </label>
-            <div className="mt-2.5">
-              <textarea
-              value={notes}
-                onChange={(e) => {
-                  setNotes(e.target.value);
-                }}
-                name="message"
-                id="message"
-                rows="4"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              ></textarea>
-            </div>
-          </div>
+    <div className="sm:col-span-2">
+      <label
+        htmlFor="treatment"
+        className="block text-sm font-semibold leading-6 "
+      >
+        Treatment
+      </label>
+      <div className="mt-2.5">
+        <input
+          value={treatment}
+          onChange={(e) => setTreatment(e.target.value)}
+          type="text"
+          name="treatment"
+          id="treatment"
+          autoComplete="treatment"
+          className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
+        />
+      </div>
+    </div>
+
+    <div className="sm:col-span-2">
+      <label
+        htmlFor="service-price"
+        className="block text-sm font-semibold leading-6 "
+      >
+        Service Price
+      </label>
+      <div className="mt-2.5">
+        <input
+          value={servicePrice}
+          onChange={(e) => setServicePrice(e.target.value)}
+          type="number"
+          name="servicePrice"
+          id="service-price"
+          autoComplete="service-price"
+          className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
+        />
+      </div>
+    </div>
+
+    <div className="sm:col-span-2">
+      <label
+        htmlFor="notes"
+        className="block text-sm font-semibold leading-6 "
+      >
+        Recommendation/Additional Notes
+      </label>
+      <div className="mt-2.5">
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          name="notes"
+          id="notes"
+          rows="4"
+          className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        ></textarea>
+      </div>
+    </div>
+  </>
+) : (
+  ""
+)}
+
+           
 
           <div className="flex gap-x-4 sm:col-span-2">
             <div className="flex h-6 items-center">

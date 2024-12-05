@@ -152,9 +152,9 @@ export default function LoginPage() {
   )}
 </button>
 
-            <Link href="/signup">
+            {/* <Link href="/signup">
               <span className="text-sm ml-2 hover:text-blue-500 cursor-pointer">Create a new account</span>
-            </Link>
+            </Link> */}
           </form>
         </div>
       </div>

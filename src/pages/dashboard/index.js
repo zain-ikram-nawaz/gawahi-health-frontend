@@ -7,6 +7,7 @@ import Leftdashboard from '../component/dashboardsidemenu';
 import ReqCenter from '../component/reqcentercom';
 import { useSelector } from 'react-redux';
 import Register from '../component/registercom';
+import Signup from '../signup';
 
 
 
@@ -23,7 +24,7 @@ const DashboardPage = () => {
     {value === "viewreq" ? (
   <ReqCenter />
 ) : value === "register" ? (
-  <Register/>
+  <Signup/>
 ) : (
   <EmployeeList />
 )}
