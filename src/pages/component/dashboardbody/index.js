@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import Image from "next/image";
+import { Router, useRouter } from "next/router";
 import Link from "next/link";
 import { IoIosSearch } from "react-icons/io";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import Api from "../../config";
 import Modal from "../detailmodal";
-import Image from "next/image";
-import { useDispatch, useSelector } from "react-redux";
 import { setSelectedPatient } from "../../redux/editDataSlice";
-import { toast } from 'react-toastify';
-import Api from '../../config'
 
 const EmployeeList = () => {
   const router = useRouter();
-
   const dispatch = useDispatch();
+  const [patientData, setPatientData] = useState();
+  const [saveId, setSaveId] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+  const [logInfo, setLogInfo] = useState();
+  const [searchVal,setSearchVal]=useState()
+  const [searchResult ,setSearchResult] =useState()
+
   const handleEdit = (patient) => {
     dispatch(setSelectedPatient(patient));
     router.push("/form");
   };
-
-  const [patientData, setPatientData] = useState();
-  const [saveId, setSaveId] = useState();
-  const [isOpen, setIsOpen] = useState(false);
-  const [logInfo,setLogInfo]=useState()
 
   const handleOpen = (dataId) => {
     setSaveId(dataId);
@@ -35,22 +36,40 @@ const EmployeeList = () => {
   };
 
   useEffect(() => {
-  
     fetchData();
   }, []);
 
-  const DeleteItem = async (dataItem) => {
-    console.log(dataItem);
+
+  // seacrh
+  const Search = async () => {
     try {
-      const res = await fetch(`${Api.USERS}patients/${dataItem}`, {
-        method: 'DELETE',
+      const res = await fetch(`${Api.USERS}patients?filters[email][$eq]=${searchVal}`, {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json', // This is fine if you're not sending a body
+          "Content-Type": "application/json", // This is fine if you're not sending a body
         },
       });
-  
+      const data = await res.json()
+      setSearchResult(data.data)
+
       
-  
+    } catch (error) {
+      toast.error(`Error making DELETE request: ${error.message}`, {
+        position: "top-center",
+      });
+    }
+  };
+
+
+  const DeleteItem = async (dataItem) => {
+    try {
+      const res = await fetch(`${Api.USERS}patients/${dataItem}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json", // This is fine if you're not sending a body
+        },
+      });
+
       if (res.ok) {
         fetchData();
         toast.success("Item deleted successfully!", {
@@ -62,17 +81,12 @@ const EmployeeList = () => {
           position: "top-center",
         });
       }
-  
     } catch (error) {
       toast.error(`Error making DELETE request: ${error.message}`, {
         position: "top-center",
       });
     }
   };
-  
-  useEffect(()=>{
-  },[patientData])
-
 
   // authentication
 
@@ -86,10 +100,9 @@ const EmployeeList = () => {
       } catch (error) {
         console.error("Error parsing JSON from localStorage:", error);
       }
-    }
-    else{
+    } else {
       toast.error("Pleas Login First", {
-        position: "top-center"
+        position: "top-center",
       });
     }
   }, []); // Empty dependency array ensures this runs only once
@@ -98,7 +111,11 @@ const EmployeeList = () => {
     if (logInfo) {
       console.log(logInfo.user); // Access user information after state updates
     }
-  }, [logInfo]); 
+  }, [logInfo]);
+
+  useEffect(() => {
+    console.log(searchVal)
+  }, [patientData,searchVal]);
 
   return (
     <div className="">
@@ -108,14 +125,12 @@ const EmployeeList = () => {
       </div>
       <div className="flex gap-12 p-4 mt-4">
         <div className="bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl">
-          {/* <p><FaCodePullRequest className='bg-gray-600 text-5xl p-2 text-white rounded-3xl'></FaCodePullRequest></p> */}
           <Image
             src={"/patients.png"}
             width={70}
             height={70}
             alt="patient"
           ></Image>
-          {/* <p className='text-gray-500'>Step 1</p> */}
           <h2 className="text-gray-800 font-semibold">Total No of Patients</h2>
           <p className="bg-gray-400 text-white px-4 py-[2px] text-2xl rounded-lg inline-block">
             {patientData?.length <= 9
@@ -123,28 +138,38 @@ const EmployeeList = () => {
               : patientData?.length}{" "}
           </p>
         </div>
-        {logInfo?.user.is_admin ? <><div className="bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl">
-          <Image src={"/req.png"} width={70} height={70} alt="patient"></Image>
+        {logInfo?.user.is_admin ? (
+          <>
+            <div className="bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl">
+              <Image
+                src={"/req.png"}
+                width={70}
+                height={70}
+                alt="patient"
+              ></Image>
 
-          <h2 className=" font-semibold">Total No of Request </h2>
-          <p className="bg-gray-400  text-white px-4 py-[2px] text-2xl rounded-lg inline-block">
-            28{" "}
-          </p>
-        </div>
-        <div className="bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl">
-          <Image
-            src={"/patient.png"}
-            width={70}
-            height={70}
-            alt="patient"
-          ></Image>
+              <h2 className=" font-semibold">Total No of Request </h2>
+              <p className="bg-gray-400  text-white px-4 py-[2px] text-2xl rounded-lg inline-block">
+                28{" "}
+              </p>
+            </div>
+            <div className="bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl">
+              <Image
+                src={"/patient.png"}
+                width={70}
+                height={70}
+                alt="patient"
+              ></Image>
 
-          <h2 className=" font-semibold pt-4">Total No of Users </h2>
-          <p className="bg-gray-400  text-white px-4 py-[2px] text-2xl rounded-lg inline-block">
-            9{" "}
-          </p>
-        </div></> : ""}
-        
+              <h2 className=" font-semibold pt-4">Total No of Users </h2>
+              <p className="bg-gray-400  text-white px-4 py-[2px] text-2xl rounded-lg inline-block">
+                9{" "}
+              </p>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
       </div>
 
       <div className="relative flex flex-col w-full h-full text-slate-700 bg-white shadow-md rounded-xl bg-clip-border">
@@ -154,19 +179,34 @@ const EmployeeList = () => {
               <p>Patient List</p>
             </div>
 
-            <Link href={"/form"}>
+           
               {" "}
               <div className="flex gap-2 shrink-0 ">
                 <div>
                   {" "}
-                  <IoIosSearch className=" absolute text-3xl top-1  ml-1 text-gray-400" />{" "}
+                {" "}
+                {/* <IoIosSearch onClick={Search} className=" inline bg-yellow-300 border-2  p-2 text-4xl rounded text-3xl top-1  ml-1 text-gray-400" /> */}
                   <input
+                
+                  onChange={(e)=>{setSearchVal(e.target.value)}}
                     type="seacrh"
                     placeholder="Search"
-                    className="search border-2 h-full rounded"
+                    className="search border-2 p-1 rounded"
                   />
+                 
                 </div>
                 <button
+                onClick={Search}
+                  className=" items-center gap-2 rounded bg-slate-800 py-2.5 px-4 text-xs font-semibold text-white shadow-md shadow-slate-900/10 transition-all hover:shadow-lg hover:shadow-slate-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                  type="button"
+                >
+                 
+                  Search
+                </button>
+               {!logInfo?.user.is_doctor ? ( <button
+               onClick={()=>{
+                router.push("/form")
+               }}
                   className="flex select-none w-full items-center gap-2 rounded bg-slate-800 py-2.5 px-4 text-xs font-semibold text-white shadow-md shadow-slate-900/10 transition-all hover:shadow-lg hover:shadow-slate-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                   type="button"
                 >
@@ -181,9 +221,8 @@ const EmployeeList = () => {
                     <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z"></path>
                   </svg>
                   Add Patient
-                </button>
+                </button>)  : ""}
               </div>
-            </Link>
           </div>
         </div>
         <div className="p-0">
@@ -196,6 +235,7 @@ const EmployeeList = () => {
                   "age",
                   "gender",
                   "Permenent Address",
+                "status",
                   "Created Date",
                   "edit",
                 ].map((header, index) => (
@@ -228,9 +268,9 @@ const EmployeeList = () => {
               </tr>
             </thead>
             <tbody>
-              {patientData?.map((employee, index) => (
-                <tr key={index}>
-                  <td className="p-4 border-b border-slate-200">
+              {patientData?.slice().reverse().map((employee, index) => (
+                <tr  className={!employee.isSeen ?"bg-blue-100":"bg-white"} key={index}>
+                  <td  className="p-4 border-b  border-slate-200">
                     <div
                       onClick={() => {
                         handleOpen(employee.documentId);
@@ -275,6 +315,11 @@ const EmployeeList = () => {
                   </td>
                   <td className="p-4 border-b border-slate-200">
                     <p className="text-sm text-slate-500">
+                      {employee.patientStatus}
+                    </p>
+                  </td>
+                  <td className="p-4 border-b border-slate-200">
+                    <p className="text-sm text-slate-500">
                       {employee.currentdate}
                     </p>
                   </td>
@@ -296,7 +341,10 @@ const EmployeeList = () => {
                         </svg>
                       </span>
                     </button>
-                    <button onClick={()=>{DeleteItem(employee.documentId)}}
+                    <button
+                      onClick={() => {
+                        DeleteItem(employee.documentId);
+                      }}
                       className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-slate-900 transition-all hover:bg-slate-900/10 active:bg-slate-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                       type="button"
                     >

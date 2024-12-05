@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from "react";
-
-import { IoIosArrowDown } from "react-icons/io";
-import { IoIosArrowForward } from "react-icons/io";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import Link from "next/link";
+import { IoIosArrowDown,IoIosArrowForward,IoMdPersonAdd  } from "react-icons/io";
 import { FaRegRegistered } from "react-icons/fa";
 import { FaHospitalUser } from "react-icons/fa6";
-import { IoMdPersonAdd } from "react-icons/io";
-import Image from "next/image";
+import { AiOutlineLogout } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { setValue } from "../../redux/viewreq";
 import { useSelector } from "react-redux";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { AiOutlineLogout } from "react-icons/ai";
-import Api from "../../config"
 import { toast } from "react-toastify";
+import Api from "../../config"
 
 export default function Leftdashboard() {
   const router =useRouter()
@@ -99,6 +96,7 @@ export default function Leftdashboard() {
     router.push("/")
   }
 
+// authentication 
   useEffect(() => {
     const logData = localStorage.getItem("login");
 
@@ -114,16 +112,16 @@ export default function Leftdashboard() {
       toast.error("Pleas Login First", {
         position: "top-center"
       });
-      router.push('/')
     }
     setLoading2(false)
-  }, []); // Empty dependency array ensures this runs only once
+  }, []); 
 
   useEffect(() => {
     if (logInfo) {
       console.log(logInfo.user); // Access user information after state updates
     }
   }, [logInfo,loading2]); 
+
   return (
     <>
        {loading2 ? (
@@ -181,7 +179,7 @@ export default function Leftdashboard() {
               </div>
             </div>
           </li>
-          <Link href={"#"}>
+       
             <li className="opcion-con-desplegable">
               <div
                 onClick={() => {
@@ -243,8 +241,7 @@ export default function Leftdashboard() {
                 </ul>
               )}
             </li>
-          </Link>
-        <Link href={"#"}>
+      
         {logInfo?.user?.is_admin ? <li
             onClick={() => {
               handleClickButton("button3");
@@ -262,7 +259,7 @@ export default function Leftdashboard() {
                 <span>Register</span>
               </div>
             </div>
-          </li> :""}</Link>
+          </li> :""}
         </ul>
         <>
 {/* Modal toggle button */}

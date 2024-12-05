@@ -1,13 +1,11 @@
-import Link from 'next/link'
 import React, { useState } from 'react'
-import { toast } from 'react-toastify';
-import Api from '../../config'
 import { useRouter } from 'next/router';
-import { useDispatch,useSelector } from 'react-redux';
-import { setLoginInfo } from '@/pages/redux/loginInfoSlice';
+import { toast } from 'react-toastify';
+import Link from 'next/link'
+import Api from '../../config'
+
 
 export default function LoginPage() {
-  const dispatch = useDispatch()
   const router = useRouter()
   const [loading, setLoading] = useState(false); 
   const [formData, setFormData] = useState({
@@ -40,16 +38,14 @@ export default function LoginPage() {
 
       const result = await res.json();
       if(res.ok){
-      console.log(result)
       localStorage.setItem("login",JSON.stringify(result))
-      // dispatch(setLoginInfo(result))
         toast.success("Login successful!!", {
           position: "top-center"
         });
+        router.push("/dashboard")
       }
    
      else{
-      toast()
       toast.error(result.error.message, {
         position: "top-center"
       });
@@ -61,7 +57,7 @@ export default function LoginPage() {
       });
 
     } finally {
-      router.push("/dashboard")
+      
       setLoading(false); // Hide loading button
     }
    
