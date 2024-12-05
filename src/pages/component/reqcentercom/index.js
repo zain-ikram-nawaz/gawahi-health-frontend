@@ -1,11 +1,21 @@
-import React from "react";
-import data from "../../data.json";
+import React,{useEffect,useState} from "react";
+
 
 import Image from "next/image";
-import { useRouter } from "next/router";
+import Api from "../../config"
+
 
 const ReqCenter = () => {
-  const router = useRouter();
+  const [data,setData]=useState()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(`${Api.USERS}requests`);
+      const data = await response.json();
+      setData(data.data);
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="">
@@ -14,14 +24,14 @@ const ReqCenter = () => {
         <div className="bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl">
           <Image
             src={"/request.png"}
-            width={100}
-            height={100}
+            width={70}
+            height={70}
             alt="patient"
           ></Image>
 
           <h2 className=" font-semibold">Total No of Request </h2>
           <p className="bg-gray-400  text-white px-4 py-[2px] text-2xl rounded-lg inline-block">
-            28{" "}
+          {data?.length}
           </p>
         </div>
       </div>
@@ -40,14 +50,11 @@ const ReqCenter = () => {
             <thead>
               <tr>
                 {[
-                  "Member",
-                  "Number",
-                  "age",
-                  "gender",
-                  "Permenent Address",
-                  "Created Date",
-                  "edit",
-                  "response",
+                  "User Name",
+                  "Post",
+                  "resquest for",
+                  "responce",
+                 
                 ].map((header, index) => (
                   <th
                     key={index}
@@ -78,7 +85,7 @@ const ReqCenter = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((employee, index) => (
+              {data?.map((employee, index) => (
                 <tr key={index}>
                   <td className="p-4 border-b border-slate-200">
                     <div className="flex items-center gap-3">
@@ -89,7 +96,7 @@ const ReqCenter = () => {
                       />
                       <div className="flex flex-col">
                         <p className="text-sm font-semibold text-slate-700">
-                          {employee.firstName}
+                          {employee.name}
                         </p>
                         <p className="text-sm text-slate-500">
                           {employee.email}
@@ -100,15 +107,15 @@ const ReqCenter = () => {
                   <td className="p-4 border-b border-slate-200">
                     <div className="flex flex-col">
                       <p className="text-sm font-semibold text-slate-700">
-                        {employee.phoneNumber}
+                        {employee.field}
                       </p>
-                      <p className="text-sm text-slate-500">{employee.city}</p>
                     </div>
                   </td>
-
                   <td className="p-4 border-b border-slate-200">
-                    <p className="text-sm text-slate-500">{employee.age}</p>
+                    <p className="text-sm text-slate-500">{employee.notes}</p>
                   </td>
+
+                  {/* 
                   <td className="p-4 border-b border-slate-200">
                     <p className="text-sm text-slate-500">{employee.gender}</p>
                   </td>
@@ -122,7 +129,7 @@ const ReqCenter = () => {
                     <p className="text-sm text-slate-500">
                       {employee.currentdate}
                     </p>
-                  </td>
+                  </td> */}
                   <td className="p-4 border-b border-slate-200">
                     <button
                       className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-slate-900 transition-all hover:bg-slate-900/10 active:bg-slate-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"

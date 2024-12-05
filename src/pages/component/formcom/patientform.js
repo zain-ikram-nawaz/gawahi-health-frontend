@@ -1,76 +1,191 @@
-import React from "react";
-import { useState } from "react";
-import data from "../../data.json";
-import { useRouter } from "next/router";
+
+
+import React, { useEffect } from "react";
+import { useState,useRef } from "react";
+import Api from "../../config"
+import { toast } from "react-toastify";
+import { useSelector ,useDispatch  } from "react-redux";
+
 
 export default function Patientform() {
-  const router = useRouter();
-  const data2  = router.query.data;
-  // console.log(data2)
+  const [loading, setLoading] = useState(false); 
+  const formRef = useRef();
+  const dispatch = useDispatch();
+  const editData = useSelector((state) => state.editData.selectedPatient); 
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [cnic, setCnic] = useState("");
-  const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
-  const [doctorName, setDoctorName] = useState("");
-  const [diagnosis, setDiagnosis] = useState("");
-  const [treatment, setTreatment] = useState("");
-  const [currentAddress, setCurrentAddress] = useState("");
-  const [permanentAddress, setPermanentAddress] = useState("");
-  const [servicePrice, setServicePrice] = useState("");
-  const [notes, setNotes] = useState("");
-  
-  const [patientdata, setPatientData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    cnic: "",
-    age: "",
-    gender: "",
-    doctorName: "",
-    diagnosis: "",
-    treatment: "",
-    currentAddress: "",
-    permanentAddress: "",
-    servicePrice: "",
-    notes: "",
-  
-  });
 
-  const handleSubmit = (event) => {
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+  const [email, setEmail] = useState();
+  const [phoneNumber, setPhoneNumber] = useState();
+  const [cnic, setCnic] = useState();
+  const [age, setAge] = useState();
+  const [gender, setGender] = useState();
+  const [doctorName, setDoctorName] = useState();
+  const [diagnosis, setDiagnosis] = useState();
+  const [treatment, setTreatment] = useState();
+  const [currentAddress, setCurrentAddress] = useState();
+  const [permanentAddress, setPermanentAddress] = useState();
+  const [servicePrice, setServicePrice] = useState();
+  const [notes, setNotes] = useState();
+
+  const emptyField =()=>{
+    setFirstName("")
+    setLastName("")
+    setEmail("")
+    setPhoneNumber("")
+    setCnic("")
+    setAge("")
+    setGender("")
+    setDoctorName("")
+    setDiagnosis("")
+    setTreatment("")
+    setCurrentAddress("")
+    setPermanentAddress("")
+    setServicePrice("")
+    setNotes("")
+  }
+  useEffect(() => {
+    if (editData) {
+      setFirstName(editData.firstName || "");
+      setLastName(editData.lastName || "");
+      setEmail(editData.email || "");
+      setPhoneNumber(editData.phoneNumber || "");
+      setCnic(editData.cnic || "");
+      setAge(editData.age || "");
+      setGender(editData.gender || "");
+      setDoctorName(editData.doctorName || "");
+      setDiagnosis(editData.diagnosis || "");
+      setTreatment(editData.treatment || "");
+      setCurrentAddress(editData.currentAddress || "");
+      setPermanentAddress(editData.permanentAddress || "");
+      setServicePrice(editData.servicePrice || "");
+      setNotes(editData.notes || "");
+    }
+  }, [editData]);
+  const handleSubmit =async (event) => {
+    if (
+      firstName === "" ||
+      lastName === "" ||
+      email === "" ||
+      phoneNumber === "" ||
+      cnic === "" ||
+      age === "" ||
+      gender === "" ||
+      doctorName === "" ||
+      diagnosis === "" ||
+      treatment === "" ||
+      currentAddress === "" ||
+      permanentAddress === "" ||
+      servicePrice === "" ||
+      notes === ""
+    ) {
+      alert("Please fill all the fields.");
+      return;
+    }
     event.preventDefault();
-    const newPatientData = {
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      cnic,
-      age,
-      gender,
-      doctorName,
-      diagnosis,
-      treatment,
-      currentAddress,
-      permanentAddress,
-      servicePrice,
-      notes,
-    };
 
-    data.push(newPatientData)
-    console.log(data)
-    // Update the patient data state with the collected data
-    // setPatientData(newPatientData);
-    router.push("/component/dashboard")
+    setLoading(true);
 
-    // Log the collected data (Optional)
-    // localStorage.setItem("patientData",JSON.stringify([newPatientData]))
-  };
+    const formData = new FormData();
+    formData.append("firstName",firstName)
+    formData.append("lastName",lastName)
+    formData.append("email",email)
+    formData.append("phoneNumber",phoneNumber)
+    formData.append("cnic",cnic)
+    formData.append("age",age)
+    formData.append("gender",gender)
+    formData.append("doctorName",doctorName)
+    formData.append("diagnosis",diagnosis)
+    formData.append("treatment",treatment)
+    formData.append("currentAddress",currentAddress)
+    formData.append("permanentAddress",permanentAddress)
+    formData.append("servicePrice",servicePrice)
+    formData.append("notes",notes)
+
+    const data = Object.fromEntries(formData);
+        const body = JSON.stringify({
+          data: data,
+        })
+
+        try {
+          let res;
+          let result;
+      
+          if (editData?.documentId) {
+            // Update existing patient data
+            res = await fetch(`${Api.USERS}patients/${editData.documentId}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: body,
+            });
+            result = await res.json();
+          } else {
+            // Create new patient data
+            res = await fetch(`${Api.USERS}patients`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: body,
+            });
+            result = await res.json();
+          }
+      
+          if (res.ok) {
+            toast.success("Form Submitted Successfully!", {
+              position: "top-center",
+            });
+            // emptyField()
+          } else {
+            toast.error(result.error.message, {
+              position: "top-center",
+            });
+          }
+        } catch (error) {
+          toast.error('Error making request:', error, {
+            position: "top-center",
+          });
+        } finally {
+        
+          setLoading(false); 
+        }
+      
+        
+      };
+
 
   return (
+    <>
+   {loading ? (
+  <div className="flex items-center justify-center min-h-screen">
+    <div role="status">
+      <svg
+        aria-hidden="true"
+        className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+        viewBox="0 0 100 101"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+          fill="currentColor"
+        />
+        <path
+          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+          fill="currentFill"
+        />
+      </svg>
+      <span className="sr-only">Loading...</span>
+    </div>
+  </div>
+) : (
+  ""
+)}
+
+  
     <div className="isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
       <div
         className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]"
@@ -86,11 +201,13 @@ export default function Patientform() {
       </div>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Add Patient Information{" "}
+        {editData ? "Update Patient Information" :"Add Patient Information"
+
+        }  
         </h2>
        
       </div>
-      <form
+      <form ref={formRef}
         onSubmit={handleSubmit}
         action="#"
         method="POST"
@@ -106,9 +223,11 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <input
+               value={firstName} 
                 onChange={(e) => {
                   setFirstName(e.target.value);
                 }}
+               
                 type="text"
                 name="first-name"
                 id="first-name"
@@ -117,6 +236,7 @@ export default function Patientform() {
               />
             </div>
           </div>
+          {/* lastName */}
           <div>
             <label
               htmlFor="last-name"
@@ -126,6 +246,7 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <input
+                 value={lastName}
                 onChange={(e) => {
                   setLastName(e.target.value);
                 }}
@@ -148,6 +269,7 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <input
+                 value={currentAddress}
                 onChange={(e) => {
                   setCurrentAddress(e.target.value);
                 }}
@@ -169,6 +291,7 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <input
+                 value={permanentAddress}
                 onChange={(e) => {
                   setPermanentAddress(e.target.value);
                 }}
@@ -190,6 +313,7 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <input
+              value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
@@ -211,6 +335,7 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <input
+                 value={phoneNumber}
                 onChange={(e) => {
                   setPhoneNumber(e.target.value);
                 }}
@@ -233,6 +358,7 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <input
+                 value={cnic}
                 onChange={(e) => {
                   setCnic(e.target.value);
                 }}
@@ -254,11 +380,12 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <input
+                 value={age}
                 onChange={(e) => {
                   setAge(e.target.value);
                 }}
                 type="number"
-                name="age"
+                
                 id="age"
                 autoComplete="age"
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm shadow-blue-500 ring-1 ring-inset ring-blue-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:text-sm sm:leading-6"
@@ -272,6 +399,7 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5 flex">
               <input
+                 value={gender}
                 onChange={(e) => {
                   setGender(e.target.value);
                 }}
@@ -285,6 +413,7 @@ export default function Patientform() {
             </div>
             <div className="mt-2.5 flex ">
               <input
+              value={gender}
                 onChange={(e) => {
                   setGender(e.target.value);
                 }}
@@ -307,6 +436,7 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <input
+                 value={doctorName}
                 onChange={(e) => {
                   setDoctorName(e.target.value);
                 }}
@@ -329,6 +459,7 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <input
+                 value={diagnosis}
                 onChange={(e) => {
                   setDiagnosis(e.target.value);
                 }}
@@ -350,6 +481,7 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <input
+              value={treatment}
                 onChange={(e) => {
                   setTreatment(e.target.value);
                 }}
@@ -374,10 +506,11 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <input
+              value={servicePrice}
                 onChange={(e) => {
                   setServicePrice(e.target.value);
                 }}
-                type="text"
+                type="number"
                 name="address"
                 id="age"
                 autoComplete="address"
@@ -396,6 +529,7 @@ export default function Patientform() {
             </label>
             <div className="mt-2.5">
               <textarea
+              value={notes}
                 onChange={(e) => {
                   setNotes(e.target.value);
                 }}
@@ -435,14 +569,20 @@ export default function Patientform() {
           </div>
         </div>
         <div className="mt-10">
-          <button
-            type="submit"
-            className="block w-full rounded-md bg-cyan-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm  focus:outline-indigo-600"
-          >
-            Submit
-          </button>
-        </div>
+  <button
+    type="submit"
+    className="block w-full rounded-md bg-cyan-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm focus:outline-none flex items-center justify-center"
+  >
+   
+     {editData ? "update" : "Submit"}
+   
+  </button>
+</div>
+
       </form>
     </div>
+    </>
   );
 }
+
+

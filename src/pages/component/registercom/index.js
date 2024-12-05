@@ -13,14 +13,14 @@ export default function Register() {
       <div className='flex gap-12 p-4 mt-4'>
        
           <div className='bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl'>
-          <Image src={"/recep.png"} width={100} height={100} alt='patient'></Image>
+          <Image src={"/recep.png"} width={70} height={70} alt='patient'></Image>
 
 <h2 className=' font-semibold'>Total No of Receptionist </h2>
 <p className='bg-gray-400  text-white px-4 py-[2px] text-2xl rounded-lg inline-block'>34  </p>
 
           </div>
           <div className='bg-gray-200 w-3/12 p-5 space-y-4 rounded-xl'>
-          <Image src={"/patient.png"} width={100} height={100} alt='patient'></Image>
+          <Image src={"/patient.png"} width={70} height={70} alt='patient'></Image>
 
 <h2 className=' font-semibold pt-4'>Total No of Doctors </h2>
 <p className='bg-gray-400  text-white px-4 py-[2px] text-2xl rounded-lg inline-block'>55  </p>

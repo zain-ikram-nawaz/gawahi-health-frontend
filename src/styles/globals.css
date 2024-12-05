@@ -23,3 +23,12 @@ body {
   padding-left: 60px; /* Move the placeholder text to the right */
   /* Move the placeholder text down */
 }
+.alert {
+  opacity: 1;
+  transition: opacity 1s ease-out;
+}
+
+/* After 3 seconds, apply the fade-out effect */
+.alert.fade-out {
+  opacity: 0;
+}
